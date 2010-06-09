@@ -5,8 +5,11 @@ import os.path
 
 import psycopg2
 import psycopg2.extras
+import psycopg2.extensions
 
 import xml.etree.ElementTree as ET
+
+psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 def cmdline_parser():
 
@@ -20,7 +23,8 @@ def cmdline_parser():
   # this is a comment
   tablename|select statement
   
-  the statement will be read til the end of the line.
+  the statement will be read until the end of the line.
+  ALWAYS SELECT ALL COLUMNS
 
   example:
   myschema.mytable | select * from myschema.mytable where id < 777
@@ -99,7 +103,6 @@ def parse_deffile(filename):
 def generate_dataset(deffile, db, outfile=sys.stdout):
 
   cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-  cur.execute("set client_encoding to 'utf8';")
 
   # prepare our xml tree
   root = ET.Element("dataset")
@@ -122,7 +125,12 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
       for val in rows[i].itervalues():
         value = ET.SubElement(row, "value")
         if val:
-          value.text = str(val)
+          if type(val) == unicode:
+            value.text = val
+          elif type(val) == str:
+            value.text = unicode(val, encoding='UTF8')
+          else:
+            value.text = str(val)
  
   et = ET.ElementTree(root)
   et.write(outfile, 'UTF8')
@@ -144,6 +152,7 @@ def run():
 
   try:
     db = connect_db(options)
+    db.set_client_encoding('UTF8')
   except psycopg2.OperationalError,e :
     print e.message
     sys.exit(1)

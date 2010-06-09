@@ -1,1 +1,5 @@
-altlast.cod|select * from altlast.cod
+# select with where clause
+altlast.cod|select * from altlast.cod where c_cli_id=14
+
+# without where - us ethe whole table
+altlast.ben| select * from altlast.ben

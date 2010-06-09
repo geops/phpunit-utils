@@ -117,20 +117,22 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
     for i in range(0,len(rows)):
       if i==0:
         # write column names
-        for colname in rows[i].iterkeys():
+        for colname,val in rows[i].iteritems():
           column = ET.SubElement(table, "column")
           column.text = colname
 
       row = ET.SubElement(table, "row")
-      for val in rows[i].itervalues():
-        value = ET.SubElement(row, "value")
+      for colname, val in rows[i].iteritems():
         if val:
+          value = ET.SubElement(row, "value")
           if type(val) == unicode:
             value.text = val
           elif type(val) == str:
             value.text = unicode(val, encoding='UTF8')
           else:
             value.text = str(val)
+        else:
+          null = ET.SubElement(row, "null")
  
   et = ET.ElementTree(root)
   et.write(outfile, 'UTF8')

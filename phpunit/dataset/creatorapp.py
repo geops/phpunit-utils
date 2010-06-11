@@ -9,6 +9,8 @@ import psycopg2.extensions
 
 import xml.etree.ElementTree as ET
 
+from phpunit import _version_ as phpunit_version
+
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 def cmdline_parser():
@@ -30,10 +32,10 @@ def cmdline_parser():
   myschema.mytable | select * from myschema.mytable where id < 777
 
   The resulting XMLDatset will be written to stdout.
-  """
+  """ 
 
 
-  parser = OptionParser(usage)
+  parser = OptionParser(usage, version="%prog " + phpunit_version)
 
   # operation options
   parser.add_option("-n", "--schema", dest="schema",
@@ -53,6 +55,7 @@ def cmdline_parser():
     metavar="NAME")
   parser.add_option("-w", "--no-password", action="store_true",
     dest="no_password",help="Do not ask for password")
+
   return parser.parse_args()
 
 

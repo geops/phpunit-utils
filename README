@@ -1,25 +1,28 @@
 tools & utilities for phpunit
-*****************************
+=============================
 
 
-* phpunit-datasetcreator :  create PHPUnit XML Datasets from 
-                            arbitary select satements
-
-documentation:
-
-  run
-  <command> --help
+* phpunit-datasetcreator
+  create PHPUnit XML Datasets from arbitary select satements
 
 
-install:
+documentation
+-------------
 
-  run
-  > sudo python setup.py install
-
-  and your done
+run
+<command> --help
 
 
-dependencies:
+install
+-------
+
+run
+sudo python setup.py install
+and your done
+
+
+dependencies
+------------
+
   * python >= 2.5
   * psycopg2
-

@@ -105,7 +105,8 @@ def parse_deffile(filename):
 
 def generate_dataset(deffile, db, outfile=sys.stdout):
 
-  cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+  #cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+  cur = db.cursor()
 
   # prepare our xml tree
   root = ET.Element("dataset")
@@ -117,26 +118,25 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
     cur.execute(stmnt)
     rows = cur.fetchall()
 
-    for i in range(0,len(rows)):
-      if i==0:
-        # write column names
-        for colname,val in rows[i].iteritems():
-          column = ET.SubElement(table, "column")
-          column.text = colname
-
+    d = cur.description
+    for dd in d:
+      column = ET.SubElement(table, "column")
+      column.text = dd[0]
+    
+    for r in rows:
       row = ET.SubElement(table, "row")
-      for colname, val in rows[i].iteritems():
-        if val:
+      for col in r:
+        if col:
           value = ET.SubElement(row, "value")
-          if type(val) == unicode:
-            value.text = val
-          elif type(val) == str:
-            value.text = unicode(val, encoding='UTF8')
+          if type(col) == unicode:
+            value.text = col
+          elif type(col) == str:
+            value.text = unicode(col, encoding='UTF8')
           else:
-            value.text = str(val)
+            value.text = str(col)
         else:
           null = ET.SubElement(row, "null")
- 
+      
   et = ET.ElementTree(root)
   et.write(outfile, 'UTF8')
 

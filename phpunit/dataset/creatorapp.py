@@ -132,6 +132,8 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
             value.text = col
           elif type(col) == str:
             value.text = unicode(col, encoding='UTF8')
+          elif type(col) == float:
+            value.text = "%.9f" % col
           else:
             value.text = str(col)
         else:

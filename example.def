@@ -3,3 +3,5 @@ altlast.cod|select * from altlast.cod where c_cli_id=14
 
 # without where - us ethe whole table
 altlast.ben| select * from altlast.ben
+
+altlast.centroid_v| select * from altlast.centroid_v  limit 5

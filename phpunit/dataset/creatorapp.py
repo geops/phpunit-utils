@@ -126,7 +126,7 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
     for r in rows:
       row = ET.SubElement(table, "row")
       for col in r:
-        if col:
+        if col or type(col) == bool:
           value = ET.SubElement(row, "value")
           if type(col) == unicode:
             value.text = col
@@ -134,6 +134,8 @@ def generate_dataset(deffile, db, outfile=sys.stdout):
             value.text = unicode(col, encoding='UTF8')
           elif type(col) == float:
             value.text = "%.9f" % col
+          elif type(col) == bool:
+            value.text = "true" if col else "false"
           else:
             value.text = str(col)
         else:
